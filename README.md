@@ -1,13 +1,6 @@
-**Easy Node**; 
-**Block Easy**; 
-**EZ Node**; 
-**EZ Block**; 
-**Block EZ**; 
-**EZ Creator**
+**EZ Voxel Builder**
 
-Final name TBD.
-
-This mod is designed to make creating/removing, and copying/pasting Nodes (Blocks) easy. Simple commands are used to expedite the creation process. Once enabled, the mod works as follows:
+This mod is designed to make placing, removing, copying and pasting Nodes (Blocks) easy. Simple commands are used to expedite the creation process. Once enabled, the mod works as follows:
 
 - Bring up the command terminal ('/' key by default)
 - Type 'b' for Build or 'c' for Copy followed by 3 parameters (ie. /b 10 10 6)
