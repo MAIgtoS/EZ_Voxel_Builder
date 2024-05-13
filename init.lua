@@ -2,7 +2,7 @@
 local nodes = {}
 local copied_params ={}
 
---BUILT AN ARRAY OF NODES USING 3 NUMBER PARAMETERS, FWD RIGHT UP. USES THE NODE PLAYER IS CURRENTLY WIELDING
+--BUILD AN ARRAY OF NODES USING 3 NUMBER PARAMETERS, FWD RIGHT UP. USES THE NODE PLAYER IS CURRENTLY WIELDING
 minetest.register_chatcommand("b", {
     
     func = function(name, param)
@@ -39,7 +39,7 @@ minetest.register_chatcommand("c", {
     end
 })
 
---FOR NOW, MY FEABLE ATTEMPT TO MAKE A PASTE FUNCTION THAT WILL PLACE AN ARRAY OF NODES FROM COPIED DATA
+--PASTE AN ARRAY OF NODES FROM COPIED DATA
 minetest.register_chatcommand("p", {
     
     func = function(name, param)
@@ -287,12 +287,8 @@ function paste_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg)
                 playerPos.z = playerPos.z + zstep
                 node_counter = node_counter + 1
                 local node_count = node_counter
-                --local node_pos = minetest.string_to_pos(nodes[node_count].position)
                 local node_name = nodes[node_count].name
 
-                --PICK BACK UP HERE!!
-
-                --minetest.chat_send_all(node_count .. "\n" .. dump(node_pos) .. "\n" .. node_name)
                 
                 minetest.set_node({x=playerPos.x,y=playerPos.y,z=playerPos.z},{name = node_name})
 
