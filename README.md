@@ -8,7 +8,10 @@ This mod is designed to make placing, removing, copying and pasting Nodes (Block
   - Note that parameter directions are based on the direction facing, not a specific direction like 'North'
   - The first position starts with the node immediately in front of the player
 - Using /b 10 10 6 will build a structure 10 nodes forward by 10 nodes to the right by 6 nodes tall
- - Note that the structure built will be of the node currently being wielded by the player
- - If not wielding anything, the 'structure' built will be of "air", effectively deleting an area of nodes
+  - Note that the structure built will be of the node currently being wielded by the player
+  - If not wielding anything, the 'structure' built will be of "air", effectively deleting an area of nodes
 - Using /c 10 -10 6 will copy 10 nodes forward by 10 nodes to the left by 6 nodes tall
+  - A negative number for parameter 2 will cause nodes to be built to the left instead of to the right
+  - A negative number for parameter 3 will cause nodes to be built below instead of above
 - Once an area has been copied, the player can type '/p' to paste the identical area in a new location and rotation
+- Type '/u' to undo the previous build or paste action
