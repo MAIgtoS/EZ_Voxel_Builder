@@ -5,6 +5,8 @@ local copied_params ={}
 
 --BUILD AN ARRAY OF NODES USING 3 NUMBER PARAMETERS, FWD RIGHT UP. USES THE NODE PLAYER IS CURRENTLY WIELDING
 minetest.register_chatcommand("b", {
+    description = "Build an area of nodes. Will use currently wielded node. Parameters 2 and 3 can be negative numbers, ie. /b 3 -10 -2.",
+    params = "[<# of Nodes Forward>] [<# of Nodes Right>] [<# of Nodes Up>]",
     
     func = function(name, param)
         
@@ -27,6 +29,8 @@ minetest.register_chatcommand("b", {
 
 --MAKE A COPY OF AN ARRAY OF NODES USING 3 NUMBER PARAMETERS, FWD RIGHT UP. 
 minetest.register_chatcommand("c", {
+    description = "Copy an area of nodes. Parameters 2 and 3 can be negative numbers, ie. /c 16 -12 -1.",
+    params = "[<# of Nodes Forward>] [<# of Nodes Right>] [<# of Nodes Up>]",
     
     func = function(name, param)
         
@@ -42,6 +46,7 @@ minetest.register_chatcommand("c", {
 
 --PASTE AN ARRAY OF NODES FROM COPIED DATA
 minetest.register_chatcommand("p", {
+    description = "Paste an area of nodes identical to that which was copied.",
     
     func = function(name, param)
 
@@ -62,6 +67,7 @@ minetest.register_chatcommand("p", {
 
 --UNDO PREVIOUS BUILD OR PASTE OPERATION
 minetest.register_chatcommand("u", {
+    description = "Undo a previously commanded 'build' or 'paste' action. Will restore nodes to prior state.",
     
     func = function(name, param)
 
