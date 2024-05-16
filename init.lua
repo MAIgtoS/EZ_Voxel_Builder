@@ -1,5 +1,6 @@
 -- LOCAL GLOBAL TABLE TO STORE COPIED NODE DATA
 local nodes = {}
+local undonodes = {}
 local copied_params ={}
 
 --BUILD AN ARRAY OF NODES USING 3 NUMBER PARAMETERS, FWD RIGHT UP. USES THE NODE PLAYER IS CURRENTLY WIELDING
@@ -35,7 +36,7 @@ minetest.register_chatcommand("c", {
 
         copy_nodes(name,playerPos,t,param2counter,param3counter,hstep,vstep,xstep,zstep,hdg)
         
-        return true
+        return true, minetest.chat_send_player(name, "Copied")
     end
 })
 
@@ -56,6 +57,27 @@ minetest.register_chatcommand("p", {
         paste_nodes(name,playerPos,t,param2counter,param3counter,hstep,vstep,xstep,zstep,hdg)
         
         return true
+    end
+})
+
+--UNDO PREVIOUS BUILD OR PASTE OPERATION
+minetest.register_chatcommand("u", {
+    
+    func = function(name, param)
+
+        if #undonodes == 0 then
+            minetest.chat_send_player(name,"Nothing to undo")
+            return true
+        end
+        for node_count = 1, #undonodes, 1 do
+            local pos = minetest.string_to_pos(undonodes[node_count].position)
+            local node_name = undonodes[node_count].name
+            minetest.set_node(pos,{name = node_name})
+        end
+
+        undonodes = {}
+        
+        return true, minetest.chat_send_player(name,"Undo complete")
     end
 })
 
@@ -177,8 +199,11 @@ end
 
 --CREATE THE NODES REQUESTED BY PARAMETERS
 function place_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,itemName,hdg)
+    --Clear global
+    undonodes = {}
 
     local playerPos = pos
+    local node_counter = 0
 
     for v=0, t3counter, vstep do
         for h=0, t2counter, hstep do  
@@ -191,6 +216,12 @@ function place_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,item
             for i=0, t[1]-1, 1 do
                 playerPos.x = playerPos.x + xstep
                 playerPos.z = playerPos.z + zstep
+                local node_pos = minetest.pos_to_string({x=playerPos.x,y=playerPos.y,z=playerPos.z})
+                local node_name = minetest.get_node({x=playerPos.x,y=playerPos.y,z=playerPos.z}).name
+                node_counter = node_counter + 1
+                local node_count = node_counter
+
+                undonodes[node_count] = {position=node_pos,name=node_name}
                 minetest.set_node({x=playerPos.x,y=playerPos.y,z=playerPos.z}, {name = itemName})
             end
             playerPos = minetest.get_player_by_name(name):get_pos()
@@ -271,6 +302,9 @@ end
 
 --PASTE THE NODES REQUESTED BY THE PARAMETERS
 function paste_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg)
+    --Clear global
+    undonodes = {}
+
     local playerPos = pos
     local node_counter = 0
 
@@ -288,8 +322,11 @@ function paste_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg)
                 node_counter = node_counter + 1
                 local node_count = node_counter
                 local node_name = nodes[node_count].name
+                local node_pos = minetest.pos_to_string({x=playerPos.x,y=playerPos.y,z=playerPos.z})
+                local undonode_name = minetest.get_node({x=playerPos.x,y=playerPos.y,z=playerPos.z}).name
 
-                
+                undonodes[node_count] = {position=node_pos,name=undonode_name}
+               
                 minetest.set_node({x=playerPos.x,y=playerPos.y,z=playerPos.z},{name = node_name})
 
             end
