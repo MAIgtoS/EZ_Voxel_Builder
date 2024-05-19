@@ -1,5 +1,8 @@
 **Changelog**
 
+*05-18-2024*
+- Added 'mirror' feature
+
 *05-16-2024*
 - Added 'undo' feature
 - Added '/help' descriptions/parameters
