@@ -51,15 +51,38 @@ minetest.register_chatcommand("p", {
     func = function(name, param)
 
         if #copied_params == 0 then
-            copied_params = {0,0,0}
+            return true, minetest.chat_send_player(name, "Nothing to paste")
         end
 
         local params = tostring(copied_params[1]) .. " " .. tostring(copied_params[2]) .. " " .. tostring(copied_params[3])     
         local hdg, xstep, zstep = get_heading(name)
         local playerPos, t, hstep, vstep = get_data(name, params)
         local param2counter, param3counter = get_counters(t)
+        local mirrored = false
 
-        paste_nodes(name,playerPos,t,param2counter,param3counter,hstep,vstep,xstep,zstep,hdg)
+        paste_nodes(name,playerPos,t,param2counter,param3counter,hstep,vstep,xstep,zstep,hdg,mirrored)
+        
+        return true
+    end
+})
+
+--PASTE A MIRRORED ARRAY OF NODES FROM COPIED DATA
+minetest.register_chatcommand("pm", {
+    description = "Paste an area of nodes as mirror image to that which was copied.",
+    
+    func = function(name, param)
+
+        if #copied_params == 0 then
+            return true, minetest.chat_send_player(name, "Nothing to mirror")
+        end
+
+        local params = tostring(copied_params[1]) .. " " .. tostring(copied_params[2]) .. " " .. tostring(copied_params[3])     
+        local hdg, xstep, zstep = get_heading(name)
+        local playerPos, t, hstep, vstep = get_data(name, params)
+        local param2counter, param3counter = get_counters(t)
+        local mirrored = true
+
+        paste_nodes(name,playerPos,t,param2counter,param3counter,hstep,vstep,xstep,zstep,hdg,mirrored)
         
         return true
     end
@@ -72,8 +95,7 @@ minetest.register_chatcommand("u", {
     func = function(name, param)
 
         if #undonodes == 0 then
-            minetest.chat_send_player(name,"Nothing to undo")
-            return true
+            return true, minetest.chat_send_player(name,"Nothing to undo")
         end
         for node_count = 1, #undonodes, 1 do
             local pos = minetest.string_to_pos(undonodes[node_count].position)
@@ -307,11 +329,15 @@ function copy_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg)
 end
 
 --PASTE THE NODES REQUESTED BY THE PARAMETERS
-function paste_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg)
+function paste_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg,mirrored)
     --Clear global
     undonodes = {}
 
     local playerPos = pos
+    if mirrored then
+        t2counter = t2counter * -1
+        hstep = hstep * -1
+    end
     local node_counter = 0
 
     for v=0, t3counter, vstep do
@@ -339,14 +365,26 @@ function paste_nodes(name,pos,t,t2counter,t3counter,hstep,vstep,xstep,zstep,hdg)
             playerPos = minetest.get_player_by_name(name):get_pos()
 
             -- Move sideways 1 after every forward line
-            if hdg == "north" then
-                playerPos.x = playerPos.x + t[2]/math.abs(t[2])*(math.abs(h)+1) 
-            elseif hdg == "west" then
-                playerPos.z = playerPos.z + t[2]/math.abs(t[2])*(math.abs(h)+1)
-            elseif hdg == "south" then
-                playerPos.x = playerPos.x - t[2]/math.abs(t[2])*(math.abs(h)+1)
-            elseif hdg == "east" then
-                playerPos.z = playerPos.z - t[2]/math.abs(t[2])*(math.abs(h)+1)
+            if mirrored then
+                if hdg == "north" then
+                    playerPos.x = playerPos.x - t[2]/math.abs(t[2])*(math.abs(h)+1) 
+                elseif hdg == "west" then
+                    playerPos.z = playerPos.z - t[2]/math.abs(t[2])*(math.abs(h)+1)
+                elseif hdg == "south" then
+                    playerPos.x = playerPos.x + t[2]/math.abs(t[2])*(math.abs(h)+1)
+                elseif hdg == "east" then
+                    playerPos.z = playerPos.z + t[2]/math.abs(t[2])*(math.abs(h)+1)
+                end
+            else
+                if hdg == "north" then
+                    playerPos.x = playerPos.x + t[2]/math.abs(t[2])*(math.abs(h)+1) 
+                elseif hdg == "west" then
+                    playerPos.z = playerPos.z + t[2]/math.abs(t[2])*(math.abs(h)+1)
+                elseif hdg == "south" then
+                    playerPos.x = playerPos.x - t[2]/math.abs(t[2])*(math.abs(h)+1)
+                elseif hdg == "east" then
+                    playerPos.z = playerPos.z - t[2]/math.abs(t[2])*(math.abs(h)+1)
+                end
             end
 
             --Move up 1 after every forwad line reposition
