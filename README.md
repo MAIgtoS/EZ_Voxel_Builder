@@ -14,5 +14,6 @@ This mod is designed to make placing, removing, copying and pasting Nodes (Block
   - A negative number for parameter 2 will cause nodes to be built to the left instead of to the right
   - A negative number for parameter 3 will cause nodes to be built below instead of above
 - Once an area has been copied, the player can type '/p' to paste the identical area in a new location and rotation
+- If desired, type '/pm' to paste the copied area as a mirror image
 - Type '/u' to undo the previous build or paste action
 - Type '/help' for more information
